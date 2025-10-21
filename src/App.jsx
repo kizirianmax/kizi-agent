@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
+import { ThinkingSystem, useThinking, ThinkingPresets } from './components/ThinkingSystem';
 
 // Gerenciador de memória local
 const MemoryManager = {
@@ -64,6 +65,9 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [showMemory, setShowMemory] = useState(false);
   const messagesEndRef = useRef(null);
+  
+  // Hook do sistema de pensamento
+  const { isThinking, thinkingSteps, thinkingSize, think } = useThinking();
 
   // Carregar dados ao iniciar
   useEffect(() => {
@@ -126,25 +130,49 @@ function App() {
 
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
+    const userInput = input;
     setInput('');
     setLoading(true);
 
     // Atualizar conversa atual
     updateCurrentConversation(newMessages);
 
-    // Simular delay de IA
-    setTimeout(() => {
-      const aiResponse = {
-        role: 'assistant',
-        content: simulateAI(input),
-        timestamp: new Date().toISOString()
-      };
-      
-      const finalMessages = [...newMessages, aiResponse];
-      setMessages(finalMessages);
-      updateCurrentConversation(finalMessages);
-      setLoading(false);
-    }, 1000);
+    // Determinar o tipo de pensamento baseado na mensagem
+    let thinkingSteps;
+    let thinkingSize;
+    
+    const msg = userInput.toLowerCase();
+    if (msg.includes('oi') || msg.includes('olá') || msg.includes('ola')) {
+      thinkingSteps = ThinkingPresets.small.greeting;
+      thinkingSize = 'small';
+    } else if (msg.includes('código') || msg.includes('codigo') || msg.includes('programa')) {
+      thinkingSteps = ThinkingPresets.medium.coding;
+      thinkingSize = 'medium';
+    } else if (msg.includes('projeto') || msg.includes('criar') || msg.includes('desenvolver')) {
+      thinkingSteps = ThinkingPresets.large.project;
+      thinkingSize = 'large';
+    } else if (msg.length > 100) {
+      thinkingSteps = ThinkingPresets.medium.analysis;
+      thinkingSize = 'medium';
+    } else {
+      thinkingSteps = ThinkingPresets.small.simple;
+      thinkingSize = 'small';
+    }
+
+    // Mostrar pensamento visível
+    await think(thinkingSteps, thinkingSize);
+
+    // Gerar resposta da IA
+    const aiResponse = {
+      role: 'assistant',
+      content: simulateAI(userInput),
+      timestamp: new Date().toISOString()
+    };
+    
+    const finalMessages = [...newMessages, aiResponse];
+    setMessages(finalMessages);
+    updateCurrentConversation(finalMessages);
+    setLoading(false);
   };
 
   const updateCurrentConversation = (newMessages) => {
@@ -331,7 +359,16 @@ function App() {
                   </button>
                 </div>
               ))}
-              {loading && <div className="typing">Kizi está digitando...</div>}
+              
+              {/* Sistema de Pensamento Visível */}
+              {isThinking && (
+                <ThinkingSystem 
+                  size={thinkingSize}
+                  steps={thinkingSteps}
+                  onComplete={() => {}}
+                />
+              )}
+              
               <div ref={messagesEndRef} />
             </div>
 

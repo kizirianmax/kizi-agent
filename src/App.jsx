@@ -63,13 +63,15 @@ const generateAIResponse = async (messages) => {
     
   } catch (error) {
     console.error('Erro ao gerar resposta:', error);
+    console.error('Detalhes do erro:', error.message, error.stack);
     
-    // Fallback para mensagem de erro amigável
+    // Fallback para mensagem de erro amigável com detalhes
     if (error.message.includes('API key')) {
       return '⚠️ Desculpe, a API key do Groq não está configurada. Configure em .env para usar IA real.';
     }
     
-    return '⚠️ Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.';
+    // Mostrar erro detalhado para debug
+    return `⚠️ Erro: ${error.message}`;
   }
 };
 

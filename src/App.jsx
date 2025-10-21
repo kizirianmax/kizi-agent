@@ -91,6 +91,13 @@ function App() {
   // Hook do sistema de pensamento
   const { isThinking, thinkingSteps, thinkingSize, think } = useThinking();
 
+  // Scroll automático para o final quando novas mensagens chegarem
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, [messages, isThinking]); // Rola quando mensagens mudam ou quando para de pensar
+
   // Carregar dados ao iniciar
   useEffect(() => {
     // Proteções de segurança

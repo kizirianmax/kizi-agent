@@ -184,9 +184,12 @@ function App() {
   };
 
   const deleteMessage = (index) => {
-    const newMessages = messages.filter((_, i) => i !== index);
-    setMessages(newMessages);
-    updateCurrentConversation(newMessages);
+    // Confirmar antes de deletar
+    if (confirm('Deletar esta mensagem?')) {
+      const newMessages = messages.filter((_, i) => i !== index);
+      setMessages(newMessages);
+      updateCurrentConversation(newMessages);
+    }
   };
 
   const createNewConversation = () => {

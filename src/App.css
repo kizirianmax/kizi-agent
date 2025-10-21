@@ -248,30 +248,51 @@ body {
 
 .delete-msg {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 24px;
-  height: 24px;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
   background: #ff4444;
-  border: none;
+  border: 2px solid #0a0a0a;
   border-radius: 50%;
   color: #fff;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.message:hover .delete-msg {
-  opacity: 1;
+/* Desktop: mostrar no hover */
+@media (min-width: 769px) {
+  .message:hover .delete-msg {
+    opacity: 1;
+  }
+}
+
+/* Mobile: mostrar sempre, mas menor e mais discreto */
+@media (max-width: 768px) {
+  .delete-msg {
+    opacity: 0.6;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+  
+  .delete-msg:active {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 .delete-msg:hover {
   background: #cc0000;
+  transform: scale(1.1);
 }
 
 .typing {

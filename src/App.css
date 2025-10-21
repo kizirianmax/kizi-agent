@@ -670,10 +670,20 @@ body {
   }
   
   .input-area {
-    position: fixed;
+    position: sticky; /* Muda para sticky no mobile */
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 100;
+  }
+  
+  /* Aumentar espaço no mobile para o teclado */
+  .messages {
+    padding-bottom: 150px;
+  }
+  
+  /* Garantir que o input fique visível quando o teclado abrir */
+  .input-area input:focus {
+    scroll-margin-bottom: 100px;
   }
 }

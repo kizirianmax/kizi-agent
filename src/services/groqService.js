@@ -88,10 +88,10 @@ export async function sendMessageToGroqStream(messages, onChunk) {
  * Modelos disponíveis no Groq
  */
 export const GROQ_MODELS = {
-  LLAMA_70B: 'llama-3.1-70b-versatile',
+  LLAMA_70B: 'llama-3.3-70b-versatile', // Atualizado: 3.1 foi descontinuado
   LLAMA_8B: 'llama-3.1-8b-instant',
-  MIXTRAL: 'mixtral-8x7b-32768',
-  GEMMA_7B: 'gemma-7b-it',
+  GPT_OSS_120B: 'openai/gpt-oss-120b',
+  GPT_OSS_20B: 'openai/gpt-oss-20b',
 };
 
 export default {

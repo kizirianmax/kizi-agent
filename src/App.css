@@ -608,17 +608,21 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .sidebar {
-    width: 70px;
+    position: fixed;
+    left: -280px;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 1000;
+    transition: left 0.3s;
   }
   
-  .sidebar-header .logo div {
-    display: none;
+  .sidebar.open {
+    left: 0;
   }
   
-  .sidebar-nav button {
-    font-size: 20px;
-    text-align: center;
-    padding: 12px;
+  .main-content {
+    width: 100%;
   }
   
   .message .content {
@@ -628,5 +632,11 @@ body {
   .memory-panel {
     width: calc(100% - 40px);
     left: 20px;
+  }
+  
+  .input-area {
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
   }
 }

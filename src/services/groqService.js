@@ -4,8 +4,8 @@
  * Gratuito com rate limits generosos
  */
 
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+// Usar API serverless do Vercel ao invés de chamar Groq diretamente
+const API_URL = '/api/chat';
 
 /**
  * Envia mensagem para o Groq AI
@@ -15,42 +15,26 @@ const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
  */
 export async function sendMessageToGroq(messages, options = {}) {
   try {
-    // Validar API key
-    if (!GROQ_API_KEY || GROQ_API_KEY === 'your_groq_api_key_here') {
-      throw new Error('Groq API key não configurada. Configure em .env');
-    }
-
-    // Preparar payload
-    const payload = {
-      model: options.model || 'llama-3.1-70b-versatile',
-      messages: messages,
-      temperature: options.temperature || 0.7,
-      max_tokens: options.maxTokens || 2000,
-      top_p: options.topP || 1,
-      stream: options.stream || false,
-    };
-
-    // Fazer requisição
-    const response = await fetch(GROQ_API_URL, {
+    // Chamar API serverless do Vercel
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${GROQ_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ messages }),
     });
 
     // Verificar erros
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error?.message || 'Erro ao comunicar com Groq API');
+      throw new Error(errorData.error || 'Erro ao comunicar com API');
     }
 
     // Parsear resposta
     const data = await response.json();
     
     // Retornar conteúdo da mensagem
-    return data.choices[0].message.content;
+    return data.response;
     
   } catch (error) {
     console.error('Erro no Groq Service:', error);
@@ -66,60 +50,30 @@ export async function sendMessageToGroq(messages, options = {}) {
  */
 export async function sendMessageToGroqStream(messages, onChunk) {
   try {
-    if (!GROQ_API_KEY || GROQ_API_KEY === 'your_groq_api_key_here') {
-      throw new Error('Groq API key não configurada');
-    }
+    // Streaming não suportado via API serverless por enquanto
+    // Usar método normal e simular streaming
 
-    const payload = {
-      model: 'llama-3.1-70b-versatile',
-      messages: messages,
-      temperature: 0.7,
-      max_tokens: 2000,
-      stream: true, // Habilitar streaming
-    };
-
-    const response = await fetch(GROQ_API_URL, {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${GROQ_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ messages }),
     });
 
     if (!response.ok) {
-      throw new Error('Erro ao comunicar com Groq API');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Erro ao comunicar com API');
     }
 
-    // Ler stream
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let fullText = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const chunk = decoder.decode(value);
-      const lines = chunk.split('\n').filter(line => line.trim() !== '');
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-          if (data === '[DONE]') continue;
-
-          try {
-            const parsed = JSON.parse(data);
-            const content = parsed.choices[0]?.delta?.content || '';
-            if (content) {
-              fullText += content;
-              onChunk(content); // Callback para cada pedaço
-            }
-          } catch (e) {
-            // Ignorar erros de parsing
-          }
-        }
-      }
+    const data = await response.json();
+    const fullText = data.response;
+    
+    // Simular streaming dividindo o texto
+    const words = fullText.split(' ');
+    for (const word of words) {
+      onChunk(word + ' ');
+      await new Promise(resolve => setTimeout(resolve, 50)); // 50ms delay
     }
 
     return fullText;

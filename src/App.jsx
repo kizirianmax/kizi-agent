@@ -64,7 +64,9 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [showMemory, setShowMemory] = useState(false);
+  const [contextMenu, setContextMenu] = useState({ show: false, index: -1, x: 0, y: 0 });
   const messagesEndRef = useRef(null);
+  const longPressTimer = useRef(null);
   
   // Hook do sistema de pensamento
   const { isThinking, thinkingSteps, thinkingSize, think } = useThinking();
@@ -190,6 +192,43 @@ function App() {
       setMessages(newMessages);
       updateCurrentConversation(newMessages);
     }
+    setContextMenu({ show: false, index: -1, x: 0, y: 0 });
+  };
+
+  const copyMessage = (index) => {
+    const message = messages[index];
+    navigator.clipboard.writeText(message.content)
+      .then(() => {
+        alert('Mensagem copiada!');
+      })
+      .catch(() => {
+        alert('Erro ao copiar mensagem');
+      });
+    setContextMenu({ show: false, index: -1, x: 0, y: 0 });
+  };
+
+  const handleLongPressStart = (e, index) => {
+    e.preventDefault();
+    longPressTimer.current = setTimeout(() => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setContextMenu({
+        show: true,
+        index: index,
+        x: rect.left + rect.width / 2,
+        y: rect.top
+      });
+    }, 500); // 500ms para ativar long press
+  };
+
+  const handleLongPressEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const closeContextMenu = () => {
+    setContextMenu({ show: false, index: -1, x: 0, y: 0 });
   };
 
   const createNewConversation = () => {
@@ -343,9 +382,18 @@ function App() {
               </button>
             </header>
 
-            <div className="messages">
+            <div className="messages" onClick={closeContextMenu}>
               {messages.map((msg, idx) => (
-                <div key={idx} className={`message ${msg.role}`}>
+                <div 
+                  key={idx} 
+                  className={`message ${msg.role}`}
+                  onTouchStart={(e) => handleLongPressStart(e, idx)}
+                  onTouchEnd={handleLongPressEnd}
+                  onTouchMove={handleLongPressEnd}
+                  onMouseDown={(e) => handleLongPressStart(e, idx)}
+                  onMouseUp={handleLongPressEnd}
+                  onMouseLeave={handleLongPressEnd}
+                >
                   <div className="avatar">{msg.role === 'user' ? '👤' : '🤖'}</div>
                   <div className="content">
                     {msg.content.split('\n').map((line, i) => <p key={i}>{line}</p>)}
@@ -353,13 +401,6 @@ function App() {
                       {new Date(msg.timestamp).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}
                     </span>
                   </div>
-                  <button 
-                    className="delete-msg"
-                    onClick={() => deleteMessage(idx)}
-                    title="Deletar mensagem"
-                  >
-                    ×
-                  </button>
                 </div>
               ))}
               
@@ -374,6 +415,26 @@ function App() {
               
               <div ref={messagesEndRef} />
             </div>
+
+            {/* Menu Contextual */}
+            {contextMenu.show && (
+              <div 
+                className="context-menu"
+                style={{
+                  position: 'fixed',
+                  left: `${contextMenu.x}px`,
+                  top: `${contextMenu.y}px`,
+                  transform: 'translate(-50%, -100%)'
+                }}
+              >
+                <button onClick={() => copyMessage(contextMenu.index)}>
+                  📋 Copiar
+                </button>
+                <button onClick={() => deleteMessage(contextMenu.index)} className="danger">
+                  🗑️ Deletar
+                </button>
+              </div>
+            )}
 
             <div className="input-area">
               <input

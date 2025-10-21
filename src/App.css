@@ -246,53 +246,61 @@ body {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.delete-msg {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 28px;
-  height: 28px;
-  background: #ff4444;
-  border: 2px solid #0a0a0a;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 16px;
+/* Menu Contextual */
+.context-menu {
+  background: #1a1a1a;
+  border: 1px solid #4a9eff;
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  animation: menuSlideIn 0.2s ease-out;
+}
+
+@keyframes menuSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -90%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%);
+  }
+}
+
+.context-menu button {
+  padding: 10px 16px;
+  background: #2a2a2a;
+  border: none;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 14px;
   cursor: pointer;
-  opacity: 0;
   transition: all 0.2s;
+  white-space: nowrap;
   display: flex;
   align-items: center;
-  justify-content: center;
-  line-height: 1;
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  gap: 6px;
 }
 
-/* Desktop: mostrar no hover */
-@media (min-width: 769px) {
-  .message:hover .delete-msg {
-    opacity: 1;
-  }
+.context-menu button:hover {
+  background: #3a3a3a;
+  transform: scale(1.05);
 }
 
-/* Mobile: mostrar sempre, mas menor e mais discreto */
-@media (max-width: 768px) {
-  .delete-msg {
-    opacity: 0.6;
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
-  }
-  
-  .delete-msg:active {
-    opacity: 1;
-    transform: scale(1.1);
-  }
+.context-menu button:active {
+  transform: scale(0.95);
 }
 
-.delete-msg:hover {
+.context-menu button.danger {
+  background: #ff4444;
+  color: #fff;
+}
+
+.context-menu button.danger:hover {
   background: #cc0000;
-  transform: scale(1.1);
 }
 
 .typing {

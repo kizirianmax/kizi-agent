@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { ThinkingSystem, useThinking, ThinkingPresets } from './components/ThinkingSystem';
+import { sendMessageToGroq } from './services/groqService';
+import rateLimiter from './utils/rateLimiter';
+import { validateMessage, detectInjection } from './utils/sanitizer';
+import { isBot, globalBehaviorDetector, preventIframeEmbedding } from './utils/antiScraping';
 
 // Gerenciador de memória local
 const MemoryManager = {
@@ -36,23 +40,37 @@ const MemoryManager = {
   }
 };
 
-// Simulação de IA
-const simulateAI = (message) => {
-  const msg = message.toLowerCase();
-  
-  if (msg.includes('oi') || msg.includes('olá') || msg.includes('ola')) {
-    return '👋 Olá! Como posso ajudar você hoje?';
+// Função para gerar resposta da IA usando Groq
+const generateAIResponse = async (messages) => {
+  try {
+    // Formatar mensagens para a API
+    const apiMessages = messages.map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }));
+
+    // Adicionar system prompt
+    const systemMessage = {
+      role: 'system',
+      content: 'Você é o Kizi, um agente autônomo inteligente com memória infinita. Você é prestativo, amigável e aprende continuamente com o usuário. Responda sempre em português brasileiro de forma clara e objetiva.'
+    };
+
+    const fullMessages = [systemMessage, ...apiMessages];
+
+    // Chamar Groq API
+    const response = await sendMessageToGroq(fullMessages);
+    return response;
+    
+  } catch (error) {
+    console.error('Erro ao gerar resposta:', error);
+    
+    // Fallback para mensagem de erro amigável
+    if (error.message.includes('API key')) {
+      return '⚠️ Desculpe, a API key do Groq não está configurada. Configure em .env para usar IA real.';
+    }
+    
+    return '⚠️ Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.';
   }
-  
-  if (msg.includes('quem') && (msg.includes('você') || msg.includes('voce'))) {
-    return 'Sou o Kizi, seu agente autônomo inteligente! Tenho memória infinita e aprendo continuamente com você. Posso ajudar com projetos, tarefas e muito mais!';
-  }
-  
-  if (msg.includes('projeto')) {
-    return '📊 Posso ajudar com gerenciamento de projetos! Use a aba "Projetos" no menu lateral para criar e organizar seus projetos.';
-  }
-  
-  return `Entendi sua mensagem: "${message}". Estou processando e aprendendo com você!`;
 };
 
 function App() {
@@ -73,6 +91,14 @@ function App() {
 
   // Carregar dados ao iniciar
   useEffect(() => {
+    // Proteções de segurança
+    preventIframeEmbedding(); // Previne embedding em iframe
+    
+    // Detectar bots
+    if (isBot()) {
+      console.warn('Bot detectado');
+    }
+    
     const savedConversations = MemoryManager.load('conversations') || [];
     const savedProjects = MemoryManager.load('projects') || [];
     
@@ -124,57 +150,88 @@ function App() {
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
 
-    const userMessage = {
-      role: 'user',
-      content: input.trim(),
-      timestamp: new Date().toISOString()
-    };
+    try {
+      // 1. Validar e sanitizar input
+      const sanitizedInput = validateMessage(input.trim());
+      
+      // 2. Detectar tentativas de injection
+      if (detectInjection(sanitizedInput)) {
+        alert('⚠️ Mensagem contém conteúdo suspeito e foi bloqueada.');
+        return;
+      }
 
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
-    const userInput = input;
-    setInput('');
-    setLoading(true);
+      // 3. Verificar rate limit
+      if (!rateLimiter.canMakeRequest()) {
+        const timeRemaining = rateLimiter.getTimeUntilReset();
+        alert(`⚠️ Limite de mensagens atingido. Aguarde ${timeRemaining} segundos.`);
+        return;
+      }
 
-    // Atualizar conversa atual
-    updateCurrentConversation(newMessages);
+      // 4. Registrar comportamento (anti-bot)
+      globalBehaviorDetector.recordAction('message');
+      if (globalBehaviorDetector.isSuspicious()) {
+        console.warn('Comportamento suspeito detectado');
+      }
 
-    // Determinar o tipo de pensamento baseado na mensagem
-    let thinkingSteps;
-    let thinkingSize;
-    
-    const msg = userInput.toLowerCase();
-    if (msg.includes('oi') || msg.includes('olá') || msg.includes('ola')) {
-      thinkingSteps = ThinkingPresets.small.greeting;
-      thinkingSize = 'small';
-    } else if (msg.includes('código') || msg.includes('codigo') || msg.includes('programa')) {
-      thinkingSteps = ThinkingPresets.medium.coding;
-      thinkingSize = 'medium';
-    } else if (msg.includes('projeto') || msg.includes('criar') || msg.includes('desenvolver')) {
-      thinkingSteps = ThinkingPresets.large.project;
-      thinkingSize = 'large';
-    } else if (msg.length > 100) {
-      thinkingSteps = ThinkingPresets.medium.analysis;
-      thinkingSize = 'medium';
-    } else {
-      thinkingSteps = ThinkingPresets.small.simple;
-      thinkingSize = 'small';
+      const userMessage = {
+        role: 'user',
+        content: sanitizedInput,
+        timestamp: new Date().toISOString()
+      };
+
+      const newMessages = [...messages, userMessage];
+      setMessages(newMessages);
+      const userInput = sanitizedInput;
+      setInput('');
+      setLoading(true);
+
+      // Atualizar conversa atual
+      updateCurrentConversation(newMessages);
+
+      // Determinar o tipo de pensamento baseado na mensagem
+      let thinkingSteps;
+      let thinkingSize;
+      
+      const msg = userInput.toLowerCase();
+      if (msg.includes('oi') || msg.includes('olá') || msg.includes('ola')) {
+        thinkingSteps = ThinkingPresets.small.greeting;
+        thinkingSize = 'small';
+      } else if (msg.includes('código') || msg.includes('codigo') || msg.includes('programa')) {
+        thinkingSteps = ThinkingPresets.medium.coding;
+        thinkingSize = 'medium';
+      } else if (msg.includes('projeto') || msg.includes('criar') || msg.includes('desenvolver')) {
+        thinkingSteps = ThinkingPresets.large.project;
+        thinkingSize = 'large';
+      } else if (msg.length > 100) {
+        thinkingSteps = ThinkingPresets.medium.analysis;
+        thinkingSize = 'medium';
+      } else {
+        thinkingSteps = ThinkingPresets.small.simple;
+        thinkingSize = 'small';
+      }
+
+      // Mostrar pensamento visível
+      await think(thinkingSteps, thinkingSize);
+
+      // Gerar resposta da IA usando Groq
+      const aiResponseContent = await generateAIResponse(newMessages);
+      
+      const aiResponse = {
+        role: 'assistant',
+        content: aiResponseContent,
+        timestamp: new Date().toISOString()
+      };
+      
+      const finalMessages = [...newMessages, aiResponse];
+      setMessages(finalMessages);
+      updateCurrentConversation(finalMessages);
+      setLoading(false);
+      
+    } catch (error) {
+      console.error('Erro ao enviar mensagem:', error);
+      alert(`⚠️ Erro: ${error.message}`);
+      setLoading(false);
     }
-
-    // Mostrar pensamento visível
-    await think(thinkingSteps, thinkingSize);
-
-    // Gerar resposta da IA
-    const aiResponse = {
-      role: 'assistant',
-      content: simulateAI(userInput),
-      timestamp: new Date().toISOString()
-    };
-    
-    const finalMessages = [...newMessages, aiResponse];
-    setMessages(finalMessages);
-    updateCurrentConversation(finalMessages);
-    setLoading(false);
   };
 
   const updateCurrentConversation = (newMessages) => {

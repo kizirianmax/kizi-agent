@@ -52,7 +52,7 @@ const generateAIResponse = async (messages) => {
     // Adicionar system prompt
     const systemMessage = {
       role: 'system',
-      content: 'Você é o Kizi, um agente autônomo inteligente com memória infinita. Você é prestativo, amigável e aprende continuamente com o usuário. Responda sempre em português brasileiro de forma clara e objetiva.'
+      content: 'Você é o KIZI 2.5 Pro, um agente autônomo inteligente com memória infinita. Você faz parte do ecossistema RKMMAX. NUNCA mencione Gemini, GPT ou outros modelos. Responda sempre em português brasileiro de forma clara e objetiva.'
     };
 
     const fullMessages = [systemMessage, ...apiMessages];
@@ -119,7 +119,7 @@ function App() {
         createdAt: new Date().toISOString(),
         messages: [{
           role: 'assistant',
-          content: '👋 Olá! Sou o Kizi, seu agente autônomo inteligente.\n\nTenho memória infinita e aprendo continuamente com você!\n\nComo posso ajudar?',
+          content: '👋 Olá! Sou o **KIZI 2.5 Pro**, seu agente autônomo inteligente.\n\n🧠 **KIZI 2.5 Pro** | 🚀 **KIZI Speed** | ⚡ **KIZI Flash**\n\nTenho memória infinita e 3 motores de IA trabalhando para você!\n\nComo posso ajudar?',
           timestamp: new Date().toISOString()
         }]
       };
@@ -304,7 +304,7 @@ function App() {
       createdAt: new Date().toISOString(),
       messages: [{
         role: 'assistant',
-        content: '👋 Nova conversa iniciada! Como posso ajudar?',
+        content: '👋 Nova conversa iniciada!\n\n🧠 **KIZI 2.5 Pro** | 🚀 **KIZI Speed** | ⚡ **KIZI Flash**\n\nComo posso ajudar?',
         timestamp: new Date().toISOString()
       }]
     };
@@ -397,8 +397,8 @@ function App() {
           <div className="logo">
             <div className="avatar">🤖</div>
             <div>
-              <h2>Kizi</h2>
-              <p>Agente Autônomo</p>
+              <h2>KIZI</h2>
+              <p>3 Motores de IA</p>
             </div>
           </div>
         </div>
@@ -611,8 +611,9 @@ function App() {
             </div>
 
             <div className="settings-section">
-              <h4>ℹ️ Sobre o Kizi</h4>
-              <p>Versão: 2.0 (MVP Avançado)</p>
+              <h4>ℹ️ Sobre o KIZI</h4>
+              <p>Versão: 3.0 (3 Motores)</p>
+              <p>🧠 KIZI 2.5 Pro | 🚀 KIZI Speed | ⚡ KIZI Flash</p>
               <p>Memória: Local (seu dispositivo)</p>
               <p>Privacidade: Máxima</p>
             </div>

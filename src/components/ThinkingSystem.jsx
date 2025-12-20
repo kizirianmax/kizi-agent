@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './ThinkingSystem.css';
 
-// Sistema de Pensamento Visível do Kizi
+// Sistema de Pensamento Visível do KIZI 2.5 Pro
 export const ThinkingSystem = ({ size = 'medium', steps = [], onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -43,7 +43,7 @@ export const ThinkingSystem = ({ size = 'medium', steps = [], onComplete }) => {
       <div className="thinking-bubble">
         <div className="thinking-header">
           <span className="thinking-icon">🧠</span>
-          <span className="thinking-title">Kizi pensando...</span>
+          <span className="thinking-title">KIZI 2.5 Pro pensando...</span>
           <span className="thinking-size-badge">{size === 'small' ? 'S' : size === 'medium' ? 'M' : 'L'}</span>
         </div>
 

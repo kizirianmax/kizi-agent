@@ -31,13 +31,13 @@ Se um motor falhar, o sistema tenta automaticamente o próximo na hierarquia, ga
 
 Escolha o plano ideal para suas necessidades:
 
-| Plano | AI Stack | Limite Diário | Características |
-|-------|----------|---------------|-----------------|
-| 💚 **Básico** | Gemini 2.5 (Reasoning) + Modelo Complementar Leve/Rápido | 50 msg/dia | Ideal para uso pessoal básico |
-| 💙 **Intermediário** | Gemini 2.5 (Reasoning) + Modelo Complementar Potente | 200 msg/dia | Para usuários regulares |
-| 💜 **Premium** | Gemini 2.5 Pro (Reasoning) + Modelo Melhor/Mais Rápido | 500 msg/dia | Profissionais e empresas |
-| 🔥 **Ultra** | Gemini 2.5 + Claude Sonnet 3.5 + Gemini 3 Pro + Groq 70b | 2000 msg/dia | Máxima performance e redundância |
-| 👨‍💻 **Dev** | Ultra + Google Max Potential Model | Ilimitado | Desenvolvedores e pesquisadores |
+| Plano | AI Stack | Limite Diário | Valor Mensal | Características |
+|-------|----------|---------------|--------------|-----------------|
+| 💚 **Básico** | Gemini 2.5 (Reasoning) + Modelo Complementar Leve/Rápido | 100 msg/dia | R$ 29,90 | Ideal para uso pessoal básico |
+| 💙 **Intermediário** | Gemini 2.5 (Reasoning) + Modelo Complementar Potente | 300 msg/dia | R$ 59,90 | Para usuários regulares |
+| 💜 **Premium** | Gemini 2.5 Pro (Reasoning) + Modelo Melhor/Mais Rápido | 600 msg/dia | R$ 99,90 | Profissionais e empresas |
+| 🔥 **Ultra** | Gemini 2.5 + Claude Sonnet 3.5 + Gemini 3 Pro + Groq 70b | 2000 msg/dia | R$ 199,90 | Máxima performance e redundância |
+| 👨‍💻 **Dev** | Ultra + Google Max Potential Model | Ilimitado | R$ 299,90 | Desenvolvedores e pesquisadores |
 
 ### 🎁 Benefícios por Plano
 
@@ -46,6 +46,27 @@ Escolha o plano ideal para suas necessidades:
 - **Premium**: Reasoning avançado + velocidade máxima
 - **Ultra**: Todos os motores + máxima redundância + acesso antecipado
 - **Dev**: Tudo do Ultra + sem limites + modelos experimentais
+
+### ⚖️ Limites e Controle de Uso
+
+O sistema implementa controles rigorosos para garantir que os limites de cada plano sejam respeitados:
+
+- **Contagem automática**: Cada mensagem enviada é contabilizada em tempo real
+- **Reset diário**: Os limites são renovados automaticamente a cada 24 horas
+- **Notificações**: Alertas quando atingir 80% e 100% do limite diário
+- **Bloqueio temporário**: Ao atingir o limite, o sistema bloqueia novas requisições até o reset
+- **Histórico de uso**: Painel com estatísticas detalhadas de consumo por dia/mês
+- **Proteção de custos**: Sistema de rate limiting impede estouros não intencionais
+
+### 💰 Precificação Estratégica
+
+Os valores foram calculados para cobrir custos de API e infraestrutura, com margem de lucro:
+
+- **Básico (R$ 29,90)**: ~3.333 tokens/msg × 100 msg = custo ~R$ 18 + infraestrutura
+- **Intermediário (R$ 59,90)**: ~4.000 tokens/msg × 300 msg = custo ~R$ 37 + infraestrutura  
+- **Premium (R$ 99,90)**: ~5.000 tokens/msg × 600 msg = custo ~R$ 65 + infraestrutura
+- **Ultra (R$ 199,90)**: Stack completo com redundância = custo ~R$ 135 + infraestrutura
+- **Dev (R$ 299,90)**: Acesso ilimitado + modelos experimentais = custo variável
 
 ## ✨ Funcionalidades
 

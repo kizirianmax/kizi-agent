@@ -37,7 +37,7 @@ Escolha o plano ideal para suas necessidades:
 | 💙 **Intermediário** | Gemini 2.5 Pro (Reasoning) + Modelo Complementar Potente | 300 msg/dia | R$ 119,90 | Para usuários regulares |
 | 💜 **Premium** | Gemini 2.5 Pro (Reasoning) + Modelo Melhor/Mais Rápido | 600 msg/dia | R$ 179,90 | Profissionais e empresas |
 | 🔥 **Ultra** | Gemini 2.5 Pro + Claude Sonnet 3.5 + Gemini 3 Pro + Groq 70b | 2000 msg/dia | R$ 299,90 | Máxima performance e redundância |
-| 👨‍💻 **Dev** | Ultra + Google Max Potential Model | Ilimitado | R$ 499,90 | Desenvolvedores e pesquisadores |
+| 👨‍💻 **Dev** | Ultra + Google Max Potential Model | 3000 msg/dia | R$ 499,90 | Desenvolvedores e pesquisadores |
 
 ### 🎁 Benefícios por Plano
 
@@ -45,7 +45,7 @@ Escolha o plano ideal para suas necessidades:
 - **Intermediário**: Modelos mais potentes + suporte prioritário
 - **Premium**: Reasoning avançado + velocidade máxima
 - **Ultra**: Todos os motores + máxima redundância + acesso antecipado
-- **Dev**: Tudo do Ultra + sem limites + modelos experimentais
+- **Dev**: Tudo do Ultra + limite estendido + modelos experimentais
 
 ### ⚖️ Limites e Controle de Uso
 
@@ -66,7 +66,7 @@ Os valores foram calculados para cobrir custos de API e infraestrutura, com marg
 - **Intermediário (R$ 119,90)**: Gemini 2.5 Pro ~5.500 tokens/msg × 300 msg = custo ~R$ 82 + infraestrutura  
 - **Premium (R$ 179,90)**: Gemini 2.5 Pro ~6.000 tokens/msg × 600 msg = custo ~R$ 130 + infraestrutura
 - **Ultra (R$ 299,90)**: Stack completo com redundância = custo ~R$ 220 + infraestrutura
-- **Dev (R$ 499,90)**: Acesso ilimitado + modelos experimentais = custo variável
+- **Dev (R$ 499,90)**: Stack completo × 3.000 msg/dia = custo ~R$ 330 + modelos experimentais + infraestrutura
 
 **Nota**: Gemini 2.5 Pro é um modelo premium de alto desempenho, o que justifica os custos mais elevados. Os valores garantem sustentabilidade financeira e qualidade do serviço.
 

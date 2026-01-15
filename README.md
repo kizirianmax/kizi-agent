@@ -1,42 +1,71 @@
-# 🤖 KIZI Agent - Sistema Inteligente com 3 Motores
+# 🤖 KIZI Agent - RKMMAX Ecosystem Architecture
 
-Agente autônomo de IA com memória infinita e 3 motores inteligentes que escolhem automaticamente o melhor modelo para cada pergunta.
+Agente autônomo de IA com memória infinita e arquitetura de 4 camadas. Sistema generalista automatizado, competidor direto do Manus.
 
-## 🚀 Sistema KIZI - 3 Motores
+## 🏗️ Arquitetura de 4 Camadas
 
-| Motor | Tecnologia | Quando Usa | Características |
-|-------|------------|------------|-----------------|
-| 🧠 **KIZI 2.5 Pro** | Gemini 2.5 Pro | Perguntas complexas | Análises, código, projetos, raciocínio avançado |
-| 🚀 **KIZI Speed** | Groq Llama 70B | Perguntas médias (padrão) | Ultra-rápido, boa qualidade |
-| ⚡ **KIZI Flash** | Gemini Flash | Perguntas simples | Saudações, respostas curtas, conversas leves |
+Sistema generalista automatizado com arquitetura hierárquica de IA:
 
-## 🧠 Seleção Automática
+### 🎯 Hierarquia de AI Engine
 
-O sistema analisa automaticamente cada pergunta e escolhe o motor ideal:
+| Nível | Motor | Função | Características |
+|-------|-------|--------|-----------------|
+| 🥇 **Primary** | Vertex AI | Sistema Principal | Motor primário para todas as requisições |
+| 🥈 **Fallback 1** | Claude Sonnet 3.5 | Backup Inteligente | Ativado quando Vertex AI falha |
+| 🥉 **Fallback 2** | Groq 70b | Turbo Mode | O mais rápido - usado como "Turbo" |
+| 🔄 **Adaptativo** | Auto-seleção | Inteligente | Escolhe automaticamente baseado na carga |
 
-- **Pergunta simples** ("Oi", "Obrigado", "Qual a capital do Brasil?") → **KIZI Flash**
-- **Pergunta média** (maioria das perguntas) → **KIZI Speed** (velocidade)
-- **Pergunta complexa** (código, análises, projetos, múltiplas perguntas) → **KIZI 2.5 Pro**
+### 🧠 Sistema de Raciocínio
 
-## 🔄 Fallback Automático
+O sistema utiliza modelos de reasoning avançados dependendo do plano:
 
-Se um motor falhar, o sistema tenta automaticamente o próximo na fila!
+- **Gemini 2.5**: Reasoning padrão para análises complexas
+- **Gemini 2.5 Pro**: Reasoning avançado para tarefas Premium
+- **Gemini 3 Pro**: Próxima geração (planos Ultra/Dev)
+
+### 🔄 Fallback Automático Inteligente
+
+Se um motor falhar, o sistema tenta automaticamente o próximo na hierarquia, garantindo disponibilidade máxima!
+
+## 📋 Planos e Limites de Uso
+
+Escolha o plano ideal para suas necessidades:
+
+| Plano | AI Stack | Limite Diário | Características |
+|-------|----------|---------------|-----------------|
+| 💚 **Básico** | Gemini 2.5 (Reasoning) + Modelo Complementar Leve/Rápido | 50 msg/dia | Ideal para uso pessoal básico |
+| 💙 **Intermediário** | Gemini 2.5 (Reasoning) + Modelo Complementar Potente | 200 msg/dia | Para usuários regulares |
+| 💜 **Premium** | Gemini 2.5 Pro (Reasoning) + Modelo Melhor/Mais Rápido | 500 msg/dia | Profissionais e empresas |
+| 🔥 **Ultra** | Gemini 2.5 + Claude Sonnet 3.5 + Gemini 3 Pro + Groq 70b | 2000 msg/dia | Máxima performance e redundância |
+| 👨‍💻 **Dev** | Ultra + Google Max Potential Model | Ilimitado | Desenvolvedores e pesquisadores |
+
+### 🎁 Benefícios por Plano
+
+- **Básico**: Acesso às funcionalidades essenciais
+- **Intermediário**: Modelos mais potentes + suporte prioritário
+- **Premium**: Reasoning avançado + velocidade máxima
+- **Ultra**: Todos os motores + máxima redundância + acesso antecipado
+- **Dev**: Tudo do Ultra + sem limites + modelos experimentais
 
 ## ✨ Funcionalidades
 
-- 💬 **Chat inteligente** com 3 motores de IA
+- 💬 **Chat inteligente** com hierarquia de IA de 4 camadas
 - 🧠 **Memória infinita** - Lembra de todas as conversas
 - 📝 **Múltiplas conversas** - Organize por temas
 - 📊 **Projetos** - Salve e gerencie projetos
 - 💾 **Exportação** - Exporte sua memória em JSON
 - 🔒 **Privacidade** - Dados salvos localmente
 - 🛡️ **Segurança** - Rate limiting e anti-scraping
+- 🔗 **GitHub Integration** - Integração direta com GitHub
+- 📧 **Email Integration** - Envio e gestão de emails
 
 ## 🛠️ Tecnologias
 
-- **Frontend**: React + Vite
+- **Frontend**: React (usado em todos os frontends RKMMAX)
 - **Backend**: Vercel Serverless Functions
-- **IA**: Gemini 2.5 Pro, Groq Llama 70B, Gemini Flash
+- **IA Primary**: Vertex AI
+- **IA Fallback**: Claude Sonnet 3.5, Groq 70b
+- **Reasoning**: Gemini 2.5, Gemini 2.5 Pro, Gemini 3 Pro
 - **Estilo**: CSS puro (sem frameworks)
 
 ## 📦 Instalação
@@ -60,13 +89,19 @@ pnpm dev
 ## ⚙️ Variáveis de Ambiente
 
 ```env
-# Gemini API (para KIZI 2.5 Pro e KIZI Flash)
-GEMINI_API_KEY=sua_api_key_aqui
+# Vertex AI (Primary System)
+VERTEX_AI_API_KEY=sua_api_key_aqui
 
-# Groq API (para KIZI Speed)
+# Claude Sonnet 3.5 (Fallback 1)
+CLAUDE_API_KEY=sua_api_key_aqui
+
+# Groq API (Fallback 2 - Turbo)
 GROQ_API_KEY=sua_api_key_aqui
 # ou
 VITE_GROQ_API_KEY=sua_api_key_aqui
+
+# Gemini API (Reasoning Models)
+GEMINI_API_KEY=sua_api_key_aqui
 ```
 
 ## 📁 Estrutura
@@ -74,7 +109,7 @@ VITE_GROQ_API_KEY=sua_api_key_aqui
 ```
 kizi-agent/
 ├── api/
-│   └── chat.js          # Serverless function com 3 motores
+│   └── chat.js          # Serverless function com hierarquia de IA
 ├── src/
 │   ├── components/
 │   │   └── ThinkingSystem.jsx  # Sistema de pensamento visível
@@ -84,7 +119,7 @@ kizi-agent/
 │   │   ├── antiScraping.js     # Proteção anti-bot
 │   │   ├── rateLimiter.js      # Limitador de requisições
 │   │   └── sanitizer.js        # Sanitização de input
-│   ├── App.jsx          # Componente principal
+│   ├── App.jsx          # Componente principal React
 │   └── main.jsx         # Entry point
 ├── index.html
 ├── vite.config.js
@@ -105,8 +140,10 @@ O projeto está configurado para deploy automático na Vercel:
 
 1. Conecte seu repositório GitHub à Vercel
 2. Configure as variáveis de ambiente:
-   - `GEMINI_API_KEY`
-   - `GROQ_API_KEY`
+   - `VERTEX_AI_API_KEY` (Primary)
+   - `CLAUDE_API_KEY` (Fallback 1)
+   - `GROQ_API_KEY` (Fallback 2 - Turbo)
+   - `GEMINI_API_KEY` (Reasoning)
 3. Deploy automático a cada push
 
 ## 📝 Licença
@@ -122,8 +159,10 @@ Proprietary - © 2025 RKMMAX. Todos os direitos reservados.
 
 <div align="center">
 
-**Parte do ecossistema KIZI/RKMMAX**
+**Parte do ecossistema RKMMAX**
 
-🧠 **KIZI 2.5 Pro** | 🚀 **KIZI Speed** | ⚡ **KIZI Flash**
+🏗️ **Arquitetura 4 Camadas** | 🥇 **Vertex AI** | 🥈 **Claude Sonnet 3.5** | 🥉 **Groq 70b Turbo**
+
+*Padrão implementado em: `kizi-agent` | `kizirian-max-site` | `rkmmax-specialists` | `rkmmax-hibrido`*
 
 </div>
